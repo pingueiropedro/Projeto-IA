@@ -1,2 +1,5 @@
 Streamlit
 Pandas
+bs4
+re
+collections
