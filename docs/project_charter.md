@@ -1,6 +1,6 @@
 # Painel de Infraestrutura Digital no Brasil
  | ODS 9 - Indústria, Inovação e Infraestrutura
- TP1
+ TP2
 
 ## Escopo do Projeto 
 
@@ -57,3 +57,17 @@ A infraestrutura de telecomunicações, a cobertura móvel e banda larga fixa, �
 - Formuladores de Politicas Publicas; 
 
 - Profissionais da área de Negócios, com foco em telecomunicação
+
+## Arquitetura Técnica (TP2)
+
+- **Interface**: Streamlit, com filtros interativos (multiselect) ligados a session_state do estado escolhido
+
+- **Extração de dados**: Scraping com BeautifulSoup extraido de sites da Anatel, gravados separadamente do app.py em 'data/raw/' (CSV e TXT)
+
+- **Performance com cache**: cache (@sr.cache_data) com aplicação as funções de carregamento, evitando a releitura de cada função 
+OBS: O cache armazena por apenas 1h 
+
+- **Entrada/Download de dados do usuario**: upload de CSV complementar via st.file_upload(), para visualização dos mesmos em um DataFrame, e a função st.file_download() para fazer o download do mesmo 
+
+- **Versionamento**: Github, com historico de commits por funcionalidade do projeto, indicando a evolução por meio da quantidade de commits
+
