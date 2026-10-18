@@ -1,6 +1,6 @@
 # Painel de Infraestrutura Digital no Brasil — Data Summary Report
 
-## Status atual (TP2)
+## Status atual (TP3)
 
 O painel opera, nesta etapa, com uma **base de dados de exemplo** (5 capitais — uma por região do país), usada para validar a arquitetura da aplicação: filtros, cache, extração web e upload/download. A integração com a base oficial e completa da Anatel é o próximo passo do projeto, e as fontes abaixo documentam tanto o que já está em uso quanto o que está planejado.
 
@@ -8,7 +8,7 @@ O painel opera, nesta etapa, com uma **base de dados de exemplo** (5 capitais �
 
 Fonte: dados de exemplo, criados manualmente para desenvolvimento
 
-Tipo de dado: Tabular, gerado em código (`pd.DataFrame`)
+Tipo de dado: Tabular (Pandas) e Geografico (Folium/st_folium)
 
 Granularidade: Por capital (1 por região — São Paulo, Manaus, Teresina, Rio Branco, Porto Alegre)
 
@@ -65,3 +65,6 @@ Granularidade: Região, UF e Município
 - A base de cobertura atual é sintética/reduzida — não deve ser usada como fonte de conclusões reais sobre desigualdade de infraestrutura, apenas como demonstração técnica
 - O scraping depende da estrutura HTML do Teletime no momento da coleta; mudanças no site podem exigir ajuste nos seletores
 - Dados enviados por upload não passam por validação de qualidade automatizada
+
+
+

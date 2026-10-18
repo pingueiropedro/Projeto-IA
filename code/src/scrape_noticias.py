@@ -7,7 +7,6 @@ raiz_projeto = Path(__file__).resolve().parent.parent
 DATA_DIR = raiz_projeto / 'data' / 'raw'
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-
 urls = [
     'https://teletime.com.br/11/08/2026/tim-roaming-agenda/',
     'https://teletime.com.br/18/09/2026/anatel-nega-recurso-oi-escolas/',

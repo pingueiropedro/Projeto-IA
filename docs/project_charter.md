@@ -4,7 +4,7 @@
 
 ## Escopo do Projeto 
 
-O projeto consiste no desenvolvimento de um dashboard, que consolida e visualiza indicadores de infraestrutura de telecomunicações no Brasil - cobertura de rede móvel (Como exemplo o 3G/4G e até mesmo o mais recente modelo 5G) e disponibilidade de banda larga fixa com base em dados abertos da Anatel. A aplicação permitirá comparar a infraestrutura dísponivel entre regiões e municípios.
+O projeto consiste no desenvolvimento de um dashboard, que consolida e visualiza indicadores de infraestrutura de telecomunicações no Brasil - cobertura de rede móvel (Como exemplo o 3G/4G e até mesmo o mais recente modelo 5G) e disponibilidade de banda larga fixa com base em dados abertos da Anatel. A aplicação permitirá comparar a infraestrutura disponível entre regiões e municípios, integrando a coleta de dados via web scraping e a gestão de indicadores via API REST.
 
 ## Problema de negócio
 
@@ -58,7 +58,7 @@ A infraestrutura de telecomunicações, a cobertura móvel e banda larga fixa, �
 
 - Profissionais da área de Negócios, com foco em telecomunicação
 
-## Arquitetura Técnica (TP2)
+## Arquitetura Técnica
 
 - **Interface**: Streamlit, com filtros interativos (multiselect) ligados a session_state do estado escolhido
 
@@ -70,4 +70,25 @@ OBS: O cache armazena por apenas 1h
 - **Entrada/Download de dados do usuario**: upload de CSV complementar via st.file_upload(), para visualização dos mesmos em um DataFrame, e a função st.file_download() para fazer o download do mesmo 
 
 - **Versionamento**: Github, com historico de commits por funcionalidade do projeto, indicando a evolução por meio da quantidade de commits
+
+- **Backend / API**: FastAPI com APIRouter, responsável por disponibilizar e receber dados de capitais e cobertura via requisições HTTP (GET e POST);
+## Planejamento de Integração com LLMs (Próximas Etapas)
+
+Com base nos dados coletados via web scraping (notícias da Anatel) e nos indicadores de cobertura móvel/fixa por município e capital, o projeto prevê a introdução de recursos de Inteligência Artificial Generativa baseada em LLMs (Large Language Models) nas seguintes frentes:
+
+- **Resumo Automático de Notícias da Anatel (Análise de Texto):**
+   - **Objetivo:** Processar os títulos e conteúdos longos das notícias coletadas do portal da Anatel e gerar resumos executivos automatizados em poucas frases.
+   - **Aplicação:** Permitir que o usuário no painel Streamlit obtenha rapidamente o contexto regulatório sem precisar ler o artigo completo.
+
+- **Classificação de Sentimento e Impacto Regulatório:**
+   - **Objetivo:** Categorizar as notícias e comunicados da Anatel quanto ao tom (Positivo, Neutro, Negativo) e ao nível de impacto no avanço do ODS 9 (Infraestrutura e Inovação).
+   - **Aplicação:** Exibir gráficos de tendência sobre o ambiente regulatório das telecomunicações no Brasil.
+
+-  **Sistema de Perguntas e Respostas (Q&A sobre Telecomunicações):**
+   - **Objetivo:** Utilizar técnica de RAG (Retrieval-Augmented Generation) sobre a base de notícias e relatórios armazenados para responder a dúvidas técnicas ou operacionais do usuário.
+   - **Exemplo de consulta:** *"Quais foram as últimas medidas da Anatel para expandir o 5G na região Norte?"*
+
+-  **Geração Automática de Relatórios de Diagnóstico:**
+   - **Objetivo:** Usar o LLM para sintetizar os dados quantitativos de cobertura móvel das capitais e redigir textos descritivos automáticos identificando lacunas de infraestrutura.
+   - **Aplicação:** Exportação de relatórios em Markdown/PDF com diagnóstico automatizado para tomada de decisão.
 
