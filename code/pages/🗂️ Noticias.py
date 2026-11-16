@@ -1,54 +1,30 @@
 from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
 DATA_DIR = Path(__file__).parent.parent.parent / 'data' / 'raw'
 
-st.header('Titulo das Noticias sobre Anatel')
-st.caption('Titulos extraidos com a utilidade do BeautifulSoup')
+st.header('Notícias sobre Anatel')
+st.caption('Coletadas do Teletime com Beautiful Soup (code/src/scrape_noticias.py)')
 
 
-@st.cache_data
+@st.cache_data(ttl=3600)
 def carregar_noticias():
   caminho = DATA_DIR / 'noticias_anatel.csv'
   if caminho.exists():
     return pd.read_csv(caminho)
-  return pd.DataFrame(columns=['titulo', 'link'])
+  return pd.DataFrame(columns=['titulo', 'data', 'corpo', 'link'])
 
 
-df_noticias = carregar_noticias()
+df = carregar_noticias()
+st.metric('Notícias coletadas', len(df))
 
-st.metric('Noticias coletadas', len(df_noticias))
-st.dataframe(df_noticias[['titulo', 'link']], use_container_width=True)
+busca = st.text_input('Buscar no título ou no texto')
+if busca:
+  mascara = (df['titulo'].str.contains(busca, case=False, na=False)
+             | df['corpo'].str.contains(busca, case=False, na=False))
+  df = df[mascara]
 
-st.header('Envie seus próprios dados')
-st.markdown(
-    'Envie um CSV complementar (ex: dados municipais) para incluir na análise'
-)
-
-if 'df_upload' not in st.session_state:
-  st.session_state['df_upload'] = None
-
-arquivo_enviado = st.file_uploader('Envie seu arquivo', type=['csv'])
-
-if arquivo_enviado is not None:
-  st.session_state['df_upload'] = pd.read_csv(arquivo_enviado)
-  st.success(
-      f'Arquivo recebido com {len(st.session_state["df_upload"])} linhas!'
-  )
-  st.balloons()
-
-if st.session_state['df_upload'] is not None:
-  st.subheader('Dados enviados pelo Usuário')
-  st.dataframe(st.session_state['df_upload'], use_container_width=True)
-
-  st.download_button(
-      'Baixe os dados enviados (CSV)',
-      data=st.session_state['df_upload'].to_csv(index=False).encode('utf-8'),
-      file_name='dados_enviados.csv',
-      mime='text/csv',
-  )
-
-  if st.button('Remover dados enviados'):
-    st.session_state['df_upload'] = None
-    st.rerun()
+colunas = [c for c in ['data', 'titulo', 'link'] if c in df.columns]
+st.dataframe(df[colunas], use_container_width=True)

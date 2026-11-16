@@ -1,94 +1,57 @@
-# Painel de Infraestrutura Digital no Brasil
- | ODS 9 - Indústria, Inovação e Infraestrutura
- TP2
+Painel de Infraestrutura Digital no Brasil
 
-## Escopo do Projeto 
+ODS 9 — Indústria, Inovação e Infraestrutura | TP2 e integração com LLM
 
-O projeto consiste no desenvolvimento de um dashboard, que consolida e visualiza indicadores de infraestrutura de telecomunicações no Brasil - cobertura de rede móvel (Como exemplo o 3G/4G e até mesmo o mais recente modelo 5G) e disponibilidade de banda larga fixa com base em dados abertos da Anatel. A aplicação permitirá comparar a infraestrutura disponível entre regiões e municípios, integrando a coleta de dados via web scraping e a gestão de indicadores via API REST.
+1. Escopo do Projeto
 
-## Problema de negócio
+Desenvolvimento de um dashboard interativo para análise da infraestrutura de telecomunicações no Brasil, com indicadores de cobertura 4G das 27 unidades federativas, visualizações geográficas, coleta de notícias e integração com inteligência artificial local.
 
-A expansão de infraestrutura de telecomunicações no Brasil não é uniforme: as principais capitais e regiões metropolitanas concentram melhor cobertura de rede móvel e banda larga fixa, enquanto municipios do interior, especialmente em regiões do Norte e do Nordeste seguem com infraestrutura limitadas, ou praticamente inexistentes. 
+2. Problema de Negócio
 
-Essa desigualdade de infraestruturaa é a base estrutural de outros problemas, como ate mesmo a exclusão digital de familias e pequenas empresas. 
+As desigualdades regionais de conectividade e a complexidade dos dados de telecomunicações dificultam a interpretação das informações. O projeto busca torná-las mais acessíveis por meio de visualizações e processamento de textos com IA.
 
-A Anatel disponibiliza esses dados abertamente no próprio site deles, mas de uma forma técnica, muito das vezes de uma forma onde pessoas comuns não possam visualizar e entender.
+3. Objetivos
 
+Analisar e comparar indicadores de cobertura 4G.
 
-## Objetivos do Projeto
+Disponibilizar gráficos, tabelas e mapas interativos.
 
-1 - Consolidar indicadores de cobertura de rede móvel (3G/4G) e banda larga fixa por municipio/região
+Integrar Streamlit e FastAPI.
 
-2 - Construir visualizações de dados que evidenciam municipios/regiões com infraestrutura mais limitada
+Coletar notícias sobre telecomunicações por web scraping.
 
-3 - Tornar tal conhecimento desses indicadores a uma acessibilidade a publico não-técnico
+Processar textos utilizando um LLM local.
 
-## Metas e indicadores de sucesso 
+4. Metas e Indicadores
 
+O projeto tem como metas consolidar os dados de cobertura 4G das 27 unidades federativas, disponibilizar gráficos e mapas interativos, integrar os serviços Streamlit e FastAPI e coletar notícias sobre telecomunicações em arquivos CSV e TXT.
 
-### Meta
-Consolidar dados de infraestrutura de rede movel por municipio 
-### Indicador de sucesso
-Pipeline de dados reprodutível, cobrindo cobertura móvel e banda larga fixa
+Além disso, contempla a integração do modelo Qwen2.5-0.5B-Instruct para processamento de textos, com geração de respostas estruturadas e execução offline validada.
+O projeto atende ao ODS 9, contribuindo para estudos sobre infraestrutura, inovação e conectividade.
 
-### Meta
-Visualizar disparidades regionais
-### Indicador de sucesso
-Gráficos comparando pelo menos 3 regiões/UFs
+Destina-se a estudantes, empresas de telecomunicações, gestores públicos e demais interessados.
 
-### Meta
-Validar a utilidade do painel
-### Indicador de sucesso
-Feedback de pelo menos 1 usuario do publico-alvo
+6. Arquitetura Técnica
 
+Streamlit, Pandas e Folium: dashboard, análise e mapas.
 
-## ODS atendido
+FastAPI: endpoints para capitais, cobertura estadual e processamento de textos.
 
-O ODS escolhido foi o de item 9(Industria, Inovação e Infraestruturaa) e se trata de uma expansão de infraestrtura e promção de inovação, incluindo o acesso universal e preços acessíveis a internet como meta explicita.
+BeautifulSoup e Requests: web scraping de notícias.
+    Obs: Não houve necessidade no uso do Selenium para este projeto.
 
-A infraestrutura de telecomunicações, a cobertura móvel e banda larga fixa, é a base física que viabiliza qualquer avanço em inclusão digital, inovação e desenvolvimento ecônomico local/regional. Ao mapear por regiões onde são atingidas por esta falta de técnologia, o projeto contribui para uma tomada de decisões para futuras melhorias sobre o tópico.
+Transformers: execução local do Qwen2.5-0.5B-Instruct em CPU.
 
-## Público Alvo
+Pydantic: validação e respostas JSON.
 
-- Empresas de telecomunicação e investidores, avaliando expansão de redes em regiões com carência;
+HTTPException: tratamento de erros HTTP 500 e 503, com validação automática 422.
 
-- Pesquisadores e estudantes de infraestrutura, tecnologia, desenvolvimento regional e até mesmo da própria area de dados; 
+GitHub: versionamento do projeto.
 
-- Formuladores de Politicas Publicas; 
+7. Integração com Inteligência Artificial
 
-- Profissionais da área de Negócios, com foco em telecomunicação
+Foi implementado o modelo Qwen2.5-0.5B-Instruct, disponibilizado pelo Hugging Face, integrado à rota POST /processar_texto.
 
-## Arquitetura Técnica
+A API recebe textos, gera respostas estruturadas e executa o modelo localmente, com funcionamento offline testado.
 
-- **Interface**: Streamlit, com filtros interativos (multiselect) ligados a session_state do estado escolhido
-
-- **Extração de dados**: Scraping com BeautifulSoup extraido de sites da Anatel, gravados separadamente do app.py em 'data/raw/' (CSV e TXT)
-
-- **Performance com cache**: cache (@sr.cache_data) com aplicação as funções de carregamento, evitando a releitura de cada função 
-OBS: O cache armazena por apenas 1h 
-
-- **Entrada/Download de dados do usuario**: upload de CSV complementar via st.file_upload(), para visualização dos mesmos em um DataFrame, e a função st.file_download() para fazer o download do mesmo 
-
-- **Versionamento**: Github, com historico de commits por funcionalidade do projeto, indicando a evolução por meio da quantidade de commits
-
-- **Backend / API**: FastAPI com APIRouter, responsável por disponibilizar e receber dados de capitais e cobertura via requisições HTTP (GET e POST);
-## Planejamento de Integração com LLMs (Próximas Etapas)
-
-Com base nos dados coletados via web scraping (notícias da Anatel) e nos indicadores de cobertura móvel/fixa por município e capital, o projeto prevê a introdução de recursos de Inteligência Artificial Generativa baseada em LLMs (Large Language Models) nas seguintes frentes:
-
-- **Resumo Automático de Notícias da Anatel (Análise de Texto):**
-   - **Objetivo:** Processar os títulos e conteúdos longos das notícias coletadas do portal da Anatel e gerar resumos executivos automatizados em poucas frases.
-   - **Aplicação:** Permitir que o usuário no painel Streamlit obtenha rapidamente o contexto regulatório sem precisar ler o artigo completo.
-
-- **Classificação de Sentimento e Impacto Regulatório:**
-   - **Objetivo:** Categorizar as notícias e comunicados da Anatel quanto ao tom (Positivo, Neutro, Negativo) e ao nível de impacto no avanço do ODS 9 (Infraestrutura e Inovação).
-   - **Aplicação:** Exibir gráficos de tendência sobre o ambiente regulatório das telecomunicações no Brasil.
-
--  **Sistema de Perguntas e Respostas (Q&A sobre Telecomunicações):**
-   - **Objetivo:** Utilizar técnica de RAG (Retrieval-Augmented Generation) sobre a base de notícias e relatórios armazenados para responder a dúvidas técnicas ou operacionais do usuário.
-   - **Exemplo de consulta:** *"Quais foram as últimas medidas da Anatel para expandir o 5G na região Norte?"*
-
--  **Geração Automática de Relatórios de Diagnóstico:**
-   - **Objetivo:** Usar o LLM para sintetizar os dados quantitativos de cobertura móvel das capitais e redigir textos descritivos automáticos identificando lacunas de infraestrutura.
-   - **Aplicação:** Exportação de relatórios em Markdown/PDF com diagnóstico automatizado para tomada de decisão.
-
+Como evolução, estão previstas funcionalidades de resumo de notícias, análise de sentimento, perguntas e respostas com RAG e geração automática de relatórios.

@@ -1,70 +1,39 @@
-# Painel de Infraestrutura Digital no Brasil — Data Summary Report
+Data Summary Report — Painel de Infraestrutura Digital no Brasil
 
-## Status atual (TP3)
+ODS 9 | TP4 e Integração com LLM Local
 
-O painel opera, nesta etapa, com uma **base de dados de exemplo** (5 capitais — uma por região do país), usada para validar a arquitetura da aplicação: filtros, cache, extração web e upload/download. A integração com a base oficial e completa da Anatel é o próximo passo do projeto, e as fontes abaixo documentam tanto o que já está em uso quanto o que está planejado.
+1. Fontes de Dados
 
-## 1. Dados de cobertura — amostra (em uso)
+O projeto utiliza dados de cobertura móvel 4G das 27 unidades federativas, organizados em arquivos CSV, além de informações sobre capitais brasileiras e notícias de telecomunicações coletadas por web scraping.
 
-Fonte: dados de exemplo, criados manualmente para desenvolvimento
+As principais bases são cobertura_estados_4g_anatel_mar2026.csv, noticias_anatel.csv.
 
-Tipo de dado: Tabular (Pandas) e Geografico (Folium/st_folium)
+2. Preparação e Processamento
 
-Granularidade: Por capital (1 por região — São Paulo, Manaus, Teresina, Rio Branco, Porto Alegre)
+Os dados são carregados e organizados com Pandas para visualização em gráficos, tabelas e mapas interativos no Streamlit, utilizando Folium para representação geográfica.
 
-Variáveis: cobertura de rede móvel (%), acessos de banda larga fixa
+As informações também são disponibilizadas por endpoints FastAPI, permitindo consultas estruturadas.
 
-Objetivo de uso: validar a interface (filtros, gráficos) antes da integração com a base oficial completa
+3. Coleta de Notícias
 
-Limitação conhecida: 5 registros não representam a distribuição real de infraestrutura entre os 5.000+ municípios brasileiros; serve apenas como prova de conceito
+A coleta utiliza Requests e BeautifulSoup para extrair conteúdos relacionados à Anatel e ao setor de telecomunicações.
 
-## 2. Notícias sobre Anatel — Teletime (em uso)
+Os resultados são armazenados em CSV, permitindo consultas e futuras análises com inteligência artificial.
 
-Fonte: portal Teletime (teletime.com.br), tag "Anatel"
+4. Processamento com LLM
 
-Tipo de dado: Não estruturada, extraída via scraping (Beautiful Soup)
+Foi integrado o modelo Qwen2.5-0.5B-Instruct, utilizando Transformers e PyTorch para geração local de textos.
 
-Coleta: script `scrape_noticias.py`, executado separadamente da aplicação, gravando em `data/raw/noticias_anatel.csv` e `data/raw/corpus_noticias.txt`
+A rota POST /processar_texto recebe entradas de 15 a 1.500 caracteres, realiza o processamento e retorna um JSON com texto original, tipo de análise e resultado.
 
-Volume coletado: 4 notícias (título, corpo do texto e link)
+A execução offline foi testada com sucesso, sem necessidade de APIs externas para inferência.
 
-Objetivo de uso: contextualizar os dados quantitativos com notícias recentes sobre regulação e infraestrutura de telecomunicações; base para a análise de frequência de palavras exibida no painel
+5. Validação dos Dados e Respostas
 
-Tratamento: filtragem de parágrafos curtos (menos de 40 caracteres, tipicamente menu/rodapé do site); remoção de palavras vazias (stopwords) na contagem de frequência
+O Pydantic valida as entradas e a estrutura das respostas da API. O FastAPI utiliza códigos HTTP 422, 500 e 503 para identificar entradas inválidas e falhas de processamento ou carregamento do modelo.
 
-## 3. CSV complementar do usuário (funcionalidade disponível)
+A validação dos valores de cobertura com a fonte oficial da Anatel permanece como uma etapa de conferência dos dados.
 
-Fonte: qualquer CSV enviado pelo usuário via upload no painel
+6. Resultado
 
-Tipo de dado: Tabular, estrutura livre (definida pelo usuário)
-
-Objetivo de uso: permitir que o público-alvo (ex: pesquisadores, formuladores de políticas) complemente a análise com dados próprios
-
-Limitação conhecida: não há validação de schema; o app apenas exibe o que foi enviado, sem cruzar automaticamente com a base de cobertura
-
-## 4. Fontes oficiais da Anatel (planejadas, ainda não integradas)
-
-### Meu Município — Acessos e Cobertura de Telecomunicações
-Fonte: Anatel, publicado via dados.gov.br
-Tipo: Tabular (CSV), atualização periódica
-Granularidade: Município, UF e Região
-Variáveis: acessos de banda larga fixa, telefonia móvel, telefonia fixa, TV por assinatura
-
-### Painel de Cobertura Móvel (Anatel)
-Tipo: Geoespacial/indicador de presença de sinal (3G/4G) por área
-Granularidade: Município/região, por tecnologia e operadora
-
-### Painel de Banda Larga Fixa (Anatel)
-Tipo: Tabular, com recortes por faixa de velocidade, tecnologia e empresa
-Granularidade: Região, UF e Município
-
-**Observação:** essas três fontes são apresentadas em painéis interativos e podem exigir navegação manual para exportação — a ser resolvido na próxima etapa do projeto. A primeira (dados.gov.br) é a mais provável de oferecer exportação direta em CSV, sendo tratada como fonte prioritária para a integração futura.
-
-## Qualidade e limitações gerais
-
-- A base de cobertura atual é sintética/reduzida — não deve ser usada como fonte de conclusões reais sobre desigualdade de infraestrutura, apenas como demonstração técnica
-- O scraping depende da estrutura HTML do Teletime no momento da coleta; mudanças no site podem exigir ajuste nos seletores
-- Dados enviados por upload não passam por validação de qualidade automatizada
-
-
-
+O projeto reúne indicadores de infraestrutura digital, visualizações interativas, coleta de notícias e processamento local de linguagem natural, formando uma base para futuras aplicações de IA em telecomunicações.

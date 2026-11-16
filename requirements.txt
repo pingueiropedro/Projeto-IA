@@ -1,5 +1,9 @@
-Streamlit
-Pandas
-bs4
-re
-collections
+streamlit
+pandas
+requests
+beautifulsoup4
+wordcloud
+folium
+streamlit-folium
+fastapi
+uvicorn
