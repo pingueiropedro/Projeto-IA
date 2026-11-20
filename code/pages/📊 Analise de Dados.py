@@ -22,7 +22,7 @@ except requests.RequestException as erro:
     st.error(f"Erro ao conectar com a API: {erro}")
     st.stop()
 
-# Filtrar os estados
+
 estados = st.multiselect(
     "Escolha os estados",
     options=dados["estado"].tolist(),

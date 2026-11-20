@@ -11,9 +11,8 @@ TAG = 'https://teletime.com.br/tag/anatel/'
 FEED = 'https://teletime.com.br/tag/anatel/feed/'
 SAIDA = Path(__file__).resolve().parent.parent.parent / 'data' / 'raw' / 'noticias_anatel.csv'
 HEADERS = {'User-Agent': 'Mozilla/5.0 (projeto academico)'}
-PADRAO = r'https://teletime\.com\.br/\d{2}/\d{2}/\d{4}/'   # matéria = data na URL
+PADRAO = r'https://teletime\.com\.br/\d{2}/\d{2}/\d{4}/'   
 
-# as 4 matérias que você já tinha (garantia)
 links = [
     'https://teletime.com.br/11/08/2026/tim-roaming-agenda/',
     'https://teletime.com.br/18/09/2026/anatel-nega-recurso-oi-escolas/',
@@ -21,7 +20,6 @@ links = [
     'https://teletime.com.br/18/09/2026/anatel-mvnos-da-telecall/',
 ]
 
-# 1a. links pelo feed RSS
 try:
     texto = requests.get(FEED, headers=HEADERS, timeout=15).text
     achados = re.findall(r'<link>\s*(https?://[^<\s]+)\s*</link>', texto)
@@ -32,7 +30,6 @@ try:
 except Exception as erro:
     print(f'Feed falhou: {erro}')
 
-# 1b. links pela página da tag (páginas 1 a 3)
 for pagina in range(1, 4):
     url = TAG if pagina == 1 else f'{TAG}page/{pagina}/'
     try:
@@ -51,7 +48,6 @@ for pagina in range(1, 4):
 links = links[:10]
 print(f'{len(links)} links para baixar')
 
-# 2. título e texto de cada matéria
 linhas = []
 for link in links:
     try:
@@ -67,6 +63,5 @@ for link in links:
         print('ERRO', link, erro)
     time.sleep(1)
 
-# 3. salvar
 pd.DataFrame(linhas).to_csv(SAIDA, index=False)
 print(f'{len(linhas)} notícias salvas em {SAIDA}')
